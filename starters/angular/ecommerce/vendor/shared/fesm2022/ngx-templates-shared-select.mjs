@@ -5,12 +5,10 @@ import { Map } from 'immutable';
 import { DOCUMENT } from '@angular/common';
 
 class SelectOptionComponent {
-    constructor() {
-        this.button = viewChild.required('btn');
-        this.value = input.required();
-        this.optionSelect = output();
-        this.presentationText = signal('');
-    }
+    button = viewChild.required('btn');
+    value = input.required();
+    optionSelect = output();
+    presentationText = signal('');
     ngAfterContentInit() {
         this._extractPresentationText();
     }
@@ -23,25 +21,23 @@ class SelectOptionComponent {
         const btnEl = this.button().nativeElement;
         this.presentationText.set(btnEl.innerText);
     }
-    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "19.2.1", ngImport: i0, type: SelectOptionComponent, deps: [], target: i0.ɵɵFactoryTarget.Component }); }
-    static { this.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "17.2.0", version: "19.2.1", type: SelectOptionComponent, isStandalone: true, selector: "ngx-select-option", inputs: { value: { classPropertyName: "value", publicName: "value", isSignal: true, isRequired: true, transformFunction: null } }, outputs: { optionSelect: "optionSelect" }, viewQueries: [{ propertyName: "button", first: true, predicate: ["btn"], descendants: true, isSignal: true }], ngImport: i0, template: "<button\n  #btn\n  (click)=\"onSelect($event)\"\n  [title]=\"'Select option: ' + presentationText()\"\n>\n  <ng-content />\n</button>\n", styles: [":host{display:block}:host button{display:block;background-color:transparent;color:var(--color-quaternary);width:100%;text-align:left;border:none;padding:.5rem .75rem;word-break:break-word;transition:background-color .2s ease,color .3s ease}:host button:hover,:host button:focus{background-color:var(--color-senary);color:var(--color-primary);outline:none}\n"], changeDetection: i0.ChangeDetectionStrategy.OnPush }); }
+    static ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "19.2.2", ngImport: i0, type: SelectOptionComponent, deps: [], target: i0.ɵɵFactoryTarget.Component });
+    static ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "17.2.0", version: "19.2.2", type: SelectOptionComponent, isStandalone: true, selector: "ngx-select-option", inputs: { value: { classPropertyName: "value", publicName: "value", isSignal: true, isRequired: true, transformFunction: null } }, outputs: { optionSelect: "optionSelect" }, viewQueries: [{ propertyName: "button", first: true, predicate: ["btn"], descendants: true, isSignal: true }], ngImport: i0, template: "<button\n  #btn\n  (click)=\"onSelect($event)\"\n  [title]=\"'Select option: ' + presentationText()\"\n>\n  <ng-content />\n</button>\n", styles: [":host{display:block}:host button{display:block;background-color:transparent;color:var(--color-quaternary);width:100%;text-align:left;border:none;padding:.5rem .75rem;word-break:break-word;transition:background-color .2s ease,color .3s ease}:host button:hover,:host button:focus{background-color:var(--color-senary);color:var(--color-primary);outline:none}\n"], changeDetection: i0.ChangeDetectionStrategy.OnPush });
 }
-i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "19.2.1", ngImport: i0, type: SelectOptionComponent, decorators: [{
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "19.2.2", ngImport: i0, type: SelectOptionComponent, decorators: [{
             type: Component,
             args: [{ selector: 'ngx-select-option', imports: [], changeDetection: ChangeDetectionStrategy.OnPush, template: "<button\n  #btn\n  (click)=\"onSelect($event)\"\n  [title]=\"'Select option: ' + presentationText()\"\n>\n  <ng-content />\n</button>\n", styles: [":host{display:block}:host button{display:block;background-color:transparent;color:var(--color-quaternary);width:100%;text-align:left;border:none;padding:.5rem .75rem;word-break:break-word;transition:background-color .2s ease,color .3s ease}:host button:hover,:host button:focus{background-color:var(--color-senary);color:var(--color-primary);outline:none}\n"] }]
         }] });
 
 class SelectComponent {
-    constructor() {
-        this._doc = inject(DOCUMENT);
-        this.options = contentChildren(SelectOptionComponent);
-        this.title = input();
-        this.disabled = input();
-        this.placeholder = input('');
-        this.showOptions = signal(false);
-        this.selected = model(null);
-        this.presentationTexts = signal(Map());
-    }
+    _doc = inject(DOCUMENT);
+    options = contentChildren(SelectOptionComponent);
+    title = input();
+    disabled = input();
+    placeholder = input('');
+    showOptions = signal(false);
+    selected = model(null);
+    presentationTexts = signal(Map());
     ngAfterContentInit() {
         const valueDuplicates = new Set();
         for (const opt of this.options()) {
@@ -81,10 +77,10 @@ class SelectComponent {
             options[newIdx].button().nativeElement.focus();
         }
     }
-    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "19.2.1", ngImport: i0, type: SelectComponent, deps: [], target: i0.ɵɵFactoryTarget.Component }); }
-    static { this.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "17.0.0", version: "19.2.1", type: SelectComponent, isStandalone: true, selector: "ngx-select", inputs: { title: { classPropertyName: "title", publicName: "title", isSignal: true, isRequired: false, transformFunction: null }, disabled: { classPropertyName: "disabled", publicName: "disabled", isSignal: true, isRequired: false, transformFunction: null }, placeholder: { classPropertyName: "placeholder", publicName: "placeholder", isSignal: true, isRequired: false, transformFunction: null }, selected: { classPropertyName: "selected", publicName: "selected", isSignal: true, isRequired: false, transformFunction: null } }, outputs: { selected: "selectedChange" }, host: { listeners: { "document:click": "onDocumentClick()", "document:keydown": "onDocumentKeydown($event)" } }, queries: [{ propertyName: "options", predicate: SelectOptionComponent, isSignal: true }], ngImport: i0, template: "<button\n  class=\"ngx-input-element\"\n  [class.expanded]=\"showOptions()\"\n  [class.disabled]=\"disabled()\"\n  (click)=\"toggleOptions($event)\"\n  [title]=\"\n    title() ? title() : (showOptions() ? 'Collapse' : 'Expand') + ' select'\n  \"\n>\n  <span>\n    @if (selected(); as selected) {\n      {{ presentationTexts().get(selected) }}\n    } @else {\n      {{ placeholder() || 'Select an option' }}\n    }\n  </span>\n  <ngx-icon name=\"ChevronRight\" />\n</button>\n@if (showOptions()) {\n  <div class=\"options\">\n    <ng-content />\n  </div>\n}\n", styles: [":host{position:relative;display:block;-webkit-user-select:none;user-select:none}:host .ngx-input-element{position:relative;padding-left:.75rem;padding-right:2rem;display:block;width:100%;text-align:left}:host .ngx-input-element ngx-icon{position:absolute;top:.5rem;right:.5rem;transform:rotate(90deg);transition:transform .3s ease;pointer-events:none}:host .ngx-input-element.expanded ngx-icon{transform:rotate(270deg)}:host .ngx-input-element.disabled{opacity:.7;pointer-events:none}:host .options{position:absolute;left:0;border:1px solid var(--color-senary);background-color:var(--color-bg);box-shadow:0 2px 20px #0000004d;border-radius:.25rem;width:100%;max-height:0;overflow:hidden;animation:expand .3s ease;animation-iteration-count:1;animation-fill-mode:forwards;box-sizing:border-box;margin-top:.25rem}@keyframes expand{0%{max-height:0}to{max-height:500px}}\n"], dependencies: [{ kind: "component", type: IconComponent, selector: "ngx-icon", inputs: ["name", "size"] }], changeDetection: i0.ChangeDetectionStrategy.OnPush }); }
+    static ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "19.2.2", ngImport: i0, type: SelectComponent, deps: [], target: i0.ɵɵFactoryTarget.Component });
+    static ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "17.0.0", version: "19.2.2", type: SelectComponent, isStandalone: true, selector: "ngx-select", inputs: { title: { classPropertyName: "title", publicName: "title", isSignal: true, isRequired: false, transformFunction: null }, disabled: { classPropertyName: "disabled", publicName: "disabled", isSignal: true, isRequired: false, transformFunction: null }, placeholder: { classPropertyName: "placeholder", publicName: "placeholder", isSignal: true, isRequired: false, transformFunction: null }, selected: { classPropertyName: "selected", publicName: "selected", isSignal: true, isRequired: false, transformFunction: null } }, outputs: { selected: "selectedChange" }, host: { listeners: { "document:click": "onDocumentClick()", "document:keydown": "onDocumentKeydown($event)" } }, queries: [{ propertyName: "options", predicate: SelectOptionComponent, isSignal: true }], ngImport: i0, template: "<button\n  class=\"ngx-input-element\"\n  [class.expanded]=\"showOptions()\"\n  [class.disabled]=\"disabled()\"\n  (click)=\"toggleOptions($event)\"\n  [title]=\"\n    title() ? title() : (showOptions() ? 'Collapse' : 'Expand') + ' select'\n  \"\n>\n  <span>\n    @if (selected(); as selected) {\n      {{ presentationTexts().get(selected) }}\n    } @else {\n      {{ placeholder() || 'Select an option' }}\n    }\n  </span>\n  <ngx-icon name=\"ChevronRight\" />\n</button>\n@if (showOptions()) {\n  <div class=\"options\">\n    <ng-content />\n  </div>\n}\n", styles: [":host{position:relative;display:block;-webkit-user-select:none;user-select:none}:host .ngx-input-element{position:relative;padding-left:.75rem;padding-right:2rem;display:block;width:100%;text-align:left}:host .ngx-input-element ngx-icon{position:absolute;top:.5rem;right:.5rem;transform:rotate(90deg);transition:transform .3s ease;pointer-events:none}:host .ngx-input-element.expanded ngx-icon{transform:rotate(270deg)}:host .ngx-input-element.disabled{opacity:.7;pointer-events:none}:host .options{position:absolute;left:0;border:1px solid var(--color-senary);background-color:var(--color-bg);box-shadow:0 2px 20px #0000004d;border-radius:.25rem;width:100%;max-height:0;overflow:hidden;animation:expand .3s ease;animation-iteration-count:1;animation-fill-mode:forwards;box-sizing:border-box;margin-top:.25rem}@keyframes expand{0%{max-height:0}to{max-height:500px}}\n"], dependencies: [{ kind: "component", type: IconComponent, selector: "ngx-icon", inputs: ["name", "size"] }], changeDetection: i0.ChangeDetectionStrategy.OnPush });
 }
-i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "19.2.1", ngImport: i0, type: SelectComponent, decorators: [{
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "19.2.2", ngImport: i0, type: SelectComponent, decorators: [{
             type: Component,
             args: [{ selector: 'ngx-select', imports: [IconComponent], changeDetection: ChangeDetectionStrategy.OnPush, template: "<button\n  class=\"ngx-input-element\"\n  [class.expanded]=\"showOptions()\"\n  [class.disabled]=\"disabled()\"\n  (click)=\"toggleOptions($event)\"\n  [title]=\"\n    title() ? title() : (showOptions() ? 'Collapse' : 'Expand') + ' select'\n  \"\n>\n  <span>\n    @if (selected(); as selected) {\n      {{ presentationTexts().get(selected) }}\n    } @else {\n      {{ placeholder() || 'Select an option' }}\n    }\n  </span>\n  <ngx-icon name=\"ChevronRight\" />\n</button>\n@if (showOptions()) {\n  <div class=\"options\">\n    <ng-content />\n  </div>\n}\n", styles: [":host{position:relative;display:block;-webkit-user-select:none;user-select:none}:host .ngx-input-element{position:relative;padding-left:.75rem;padding-right:2rem;display:block;width:100%;text-align:left}:host .ngx-input-element ngx-icon{position:absolute;top:.5rem;right:.5rem;transform:rotate(90deg);transition:transform .3s ease;pointer-events:none}:host .ngx-input-element.expanded ngx-icon{transform:rotate(270deg)}:host .ngx-input-element.disabled{opacity:.7;pointer-events:none}:host .options{position:absolute;left:0;border:1px solid var(--color-senary);background-color:var(--color-bg);box-shadow:0 2px 20px #0000004d;border-radius:.25rem;width:100%;max-height:0;overflow:hidden;animation:expand .3s ease;animation-iteration-count:1;animation-fill-mode:forwards;box-sizing:border-box;margin-top:.25rem}@keyframes expand{0%{max-height:0}to{max-height:500px}}\n"] }]
         }], propDecorators: { onDocumentClick: [{

@@ -10,12 +10,12 @@ const DROP_GRID_GROUP = new InjectionToken('DropGridGroup');
  * Groups are NOT supported on a mobile.
  */
 class DropGridGroupDirective {
-    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "19.2.1", ngImport: i0, type: DropGridGroupDirective, deps: [], target: i0.ɵɵFactoryTarget.Directive }); }
-    static { this.ɵdir = i0.ɵɵngDeclareDirective({ minVersion: "14.0.0", version: "19.2.1", type: DropGridGroupDirective, isStandalone: true, selector: "[ngxDropGridGroup]", providers: [
+    static ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "19.2.2", ngImport: i0, type: DropGridGroupDirective, deps: [], target: i0.ɵɵFactoryTarget.Directive });
+    static ɵdir = i0.ɵɵngDeclareDirective({ minVersion: "14.0.0", version: "19.2.2", type: DropGridGroupDirective, isStandalone: true, selector: "[ngxDropGridGroup]", providers: [
             { provide: DROP_GRID_GROUP, useValue: new Set() },
-        ], ngImport: i0 }); }
+        ], ngImport: i0 });
 }
-i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "19.2.1", ngImport: i0, type: DropGridGroupDirective, decorators: [{
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "19.2.2", ngImport: i0, type: DropGridGroupDirective, decorators: [{
             type: Directive,
             args: [{
                     selector: '[ngxDropGridGroup]',
@@ -54,70 +54,73 @@ const getDistanceToCell = (cell, pt) => {
 };
 const DROP_GRID = new InjectionToken('DROP_GRID');
 class DropGridComponent {
+    _zone = inject(NgZone);
+    _elRef = inject(ElementRef);
+    _renderer = inject(Renderer2);
+    _group = inject(DROP_GRID_GROUP, { optional: true });
+    slotTemplate = viewChild.required('slotTemplate', { read: TemplateRef });
+    gridVcr = viewChild.required('grid', { read: ViewContainerRef });
+    /**
+     * Emits an event when a draggable has been moved and
+     * returns the new positions of all affected items.
+     */
+    moved = output();
+    /**
+     * Emits events throughout drag lifecycle.
+     * Runs outside of NgZone.
+     */
+    drag = output();
+    /**
+     * Set the scroll container of the drop grid. If not set,
+     * it will default to the grid's parent element.
+     */
+    scrollCont = input();
+    /**
+     * Set the number of columns in the grid. Default: `4`
+     */
+    columns = input(DEFAULT_GRID_COLS);
+    /**
+     * Set the cell gap/spacing. Default: `16px`
+     */
+    cellGap = input(DEFAULT_CELL_GAP);
+    /**
+     * Disable when the height of the draggable items can't vary.
+     * This will activate more performant calculations upon drag.
+     * The option is overrided irrespective of the provided value,
+     * if the grid is part of a group (i.e. always enabled/true).
+     *
+     * Default: `true`
+     */
+    variableHeight = input(true);
+    gridTemplateColumns = computed(() => `repeat(${this.columns()}, minmax(0, 1fr))`);
+    // ContentChildren does not work in our case due to the dynamic
+    // nature of adding and remove views when transferring from one
+    // group to another (the content children are not updated after
+    // such operations).
+    _draggablesDirectives = new Map();
+    _draggablesViewRefs = new Map();
+    _draggablesEventsUnsubscribers = new Map();
+    _orderedDirectives = [];
+    _slot = null; // Slot spacer `ViewRef`
+    _dragged = null; // Currently dragged
+    _draggedId; // Currently dragged directive ID
+    _dropInProgress = false;
+    _mouseOverTimeout;
+    // Store in case you have to pass it to a group
+    _slotSize = { colSpan: 0, height: 0 };
+    _spacialGrid = [];
+    _viewIdxHover = 0; // Index of the currently hovered `ViewRef`
+    _disabled = false;
+    // Scrolling/Auto scrolling
+    _scrollContRect = { p1: { x: 0, y: 0 }, p2: { x: 0, y: 0 } };
+    _scrollInterval;
+    // Used for groups; Keeps a function that triggers `moved` event
+    // on the former host after a draggable handover is completed
+    // (in order to notify the users for the transfer).
+    //
+    // Note(Georgi): This is currently disabled since it's not needed.
+    _exHostPosNotifier = null;
     constructor() {
-        this._zone = inject(NgZone);
-        this._elRef = inject(ElementRef);
-        this._renderer = inject(Renderer2);
-        this._group = inject(DROP_GRID_GROUP, { optional: true });
-        this.slotTemplate = viewChild.required('slotTemplate', { read: TemplateRef });
-        this.gridVcr = viewChild.required('grid', { read: ViewContainerRef });
-        /**
-         * Emits an event when a draggable has been moved and
-         * returns the new positions of all affected items.
-         */
-        this.moved = output();
-        /**
-         * Emits events throughout drag lifecycle.
-         * Runs outside of NgZone.
-         */
-        this.drag = output();
-        /**
-         * Set the scroll container of the drop grid. If not set,
-         * it will default to the grid's parent element.
-         */
-        this.scrollCont = input();
-        /**
-         * Set the number of columns in the grid. Default: `4`
-         */
-        this.columns = input(DEFAULT_GRID_COLS);
-        /**
-         * Set the cell gap/spacing. Default: `16px`
-         */
-        this.cellGap = input(DEFAULT_CELL_GAP);
-        /**
-         * Disable when the height of the draggable items can't vary.
-         * This will activate more performant calculations upon drag.
-         * The option is overrided irrespective of the provided value,
-         * if the grid is part of a group (i.e. always enabled/true).
-         *
-         * Default: `true`
-         */
-        this.variableHeight = input(true);
-        this.gridTemplateColumns = computed(() => `repeat(${this.columns()}, minmax(0, 1fr))`);
-        // ContentChildren does not work in our case due to the dynamic
-        // nature of adding and remove views when transferring from one
-        // group to another (the content children are not updated after
-        // such operations).
-        this._draggablesDirectives = new Map();
-        this._draggablesViewRefs = new Map();
-        this._draggablesEventsUnsubscribers = new Map();
-        this._orderedDirectives = [];
-        this._slot = null; // Slot spacer `ViewRef`
-        this._dragged = null; // Currently dragged
-        this._dropInProgress = false;
-        // Store in case you have to pass it to a group
-        this._slotSize = { colSpan: 0, height: 0 };
-        this._spacialGrid = [];
-        this._viewIdxHover = 0; // Index of the currently hovered `ViewRef`
-        this._disabled = false;
-        // Scrolling/Auto scrolling
-        this._scrollContRect = { p1: { x: 0, y: 0 }, p2: { x: 0, y: 0 } };
-        // Used for groups; Keeps a function that triggers `moved` event
-        // on the former host after a draggable handover is completed
-        // (in order to notify the users for the transfer).
-        //
-        // Note(Georgi): This is currently disabled since it's not needed.
-        this._exHostPosNotifier = null;
         // Add the current grid to the
         // grids set, if part of a group.
         if (this._group) {
@@ -607,15 +610,15 @@ class DropGridComponent {
             p2: { x: right, y: bottom },
         };
     }
-    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "19.2.1", ngImport: i0, type: DropGridComponent, deps: [], target: i0.ɵɵFactoryTarget.Component }); }
-    static { this.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "17.2.0", version: "19.2.1", type: DropGridComponent, isStandalone: true, selector: "ngx-drop-grid", inputs: { scrollCont: { classPropertyName: "scrollCont", publicName: "scrollCont", isSignal: true, isRequired: false, transformFunction: null }, columns: { classPropertyName: "columns", publicName: "columns", isSignal: true, isRequired: false, transformFunction: null }, cellGap: { classPropertyName: "cellGap", publicName: "cellGap", isSignal: true, isRequired: false, transformFunction: null }, variableHeight: { classPropertyName: "variableHeight", publicName: "variableHeight", isSignal: true, isRequired: false, transformFunction: null }, disabled: { classPropertyName: "disabled", publicName: "disabled", isSignal: false, isRequired: false, transformFunction: null } }, outputs: { moved: "moved", drag: "drag" }, providers: [
+    static ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "19.2.2", ngImport: i0, type: DropGridComponent, deps: [], target: i0.ɵɵFactoryTarget.Component });
+    static ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "17.2.0", version: "19.2.2", type: DropGridComponent, isStandalone: true, selector: "ngx-drop-grid", inputs: { scrollCont: { classPropertyName: "scrollCont", publicName: "scrollCont", isSignal: true, isRequired: false, transformFunction: null }, columns: { classPropertyName: "columns", publicName: "columns", isSignal: true, isRequired: false, transformFunction: null }, cellGap: { classPropertyName: "cellGap", publicName: "cellGap", isSignal: true, isRequired: false, transformFunction: null }, variableHeight: { classPropertyName: "variableHeight", publicName: "variableHeight", isSignal: true, isRequired: false, transformFunction: null }, disabled: { classPropertyName: "disabled", publicName: "disabled", isSignal: false, isRequired: false, transformFunction: null } }, outputs: { moved: "moved", drag: "drag" }, providers: [
             {
                 provide: DROP_GRID,
                 useExisting: DropGridComponent,
             },
-        ], viewQueries: [{ propertyName: "slotTemplate", first: true, predicate: ["slotTemplate"], descendants: true, read: TemplateRef, isSignal: true }, { propertyName: "gridVcr", first: true, predicate: ["grid"], descendants: true, read: ViewContainerRef, isSignal: true }], ngImport: i0, template: "<ng-template #slotTemplate>\n  <div class=\"slot\"></div>\n</ng-template>\n\n<section\n  class=\"grid\"\n  [style.grid-template-columns]=\"gridTemplateColumns()\"\n  [style.gap]=\"cellGap() + 'px'\"\n>\n  <ng-container #grid />\n</section>\n", styles: [".grid{display:grid}.slot{box-sizing:border-box;border:var(--grid-slot-border, none);border-radius:var(--grid-slot-border-radius, .25rem);background:var(--grid-slot-background, var(--color-tertiary));overflow-x:hidden}\n"], changeDetection: i0.ChangeDetectionStrategy.OnPush }); }
+        ], viewQueries: [{ propertyName: "slotTemplate", first: true, predicate: ["slotTemplate"], descendants: true, read: TemplateRef, isSignal: true }, { propertyName: "gridVcr", first: true, predicate: ["grid"], descendants: true, read: ViewContainerRef, isSignal: true }], ngImport: i0, template: "<ng-template #slotTemplate>\n  <div class=\"slot\"></div>\n</ng-template>\n\n<section\n  class=\"grid\"\n  [style.grid-template-columns]=\"gridTemplateColumns()\"\n  [style.gap]=\"cellGap() + 'px'\"\n>\n  <ng-container #grid />\n</section>\n", styles: [".grid{display:grid}.slot{box-sizing:border-box;border:var(--grid-slot-border, none);border-radius:var(--grid-slot-border-radius, .25rem);background:var(--grid-slot-background, var(--color-tertiary));overflow-x:hidden}\n"], changeDetection: i0.ChangeDetectionStrategy.OnPush });
 }
-i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "19.2.1", ngImport: i0, type: DropGridComponent, decorators: [{
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "19.2.2", ngImport: i0, type: DropGridComponent, decorators: [{
             type: Component,
             args: [{ selector: 'ngx-drop-grid', changeDetection: ChangeDetectionStrategy.OnPush, providers: [
                         {
@@ -658,6 +661,71 @@ const DRAG_OPACITY = 0.8;
  * a structural directive  along with `ngx-drop-grid`.
  */
 class DraggableDirective {
+    templateRef = inject(TemplateRef);
+    _doc = inject(DOCUMENT);
+    _win = inject(WINDOW);
+    _zone = inject(NgZone);
+    _renderer = inject(Renderer2);
+    _grid = inject(DROP_GRID, { optional: true });
+    _listeners = [];
+    _dragging = false;
+    _elMidpoint = null;
+    _relativeMousePos = { x: 0, y: 0 };
+    _dragActivatorTimeout;
+    _element;
+    /**
+     * ID of the draggable element. Default: `'0'`
+     */
+    id = input('0', { alias: 'ngxDraggable' });
+    /**
+     * Represents the draggable size in the `ngx-drop-grid`.
+     * Shouldn't exceed the number of grid columns. Default: `1`
+     */
+    elementSize = input(1, { alias: 'ngxDraggableSize' });
+    /**
+     * Zero-based position or order of the draggable element in the `ngx-drop-grid`.
+     * Not dynamic.
+     */
+    position = input(0, { alias: 'ngxDraggablePosition' });
+    /**
+     * The columns number in the `ngx-drop-grid`
+     */
+    gridColumns = input(1, { alias: 'ngxDraggableCols' });
+    /**
+     * Disables the drag functionality.
+     */
+    disabled = signal(false);
+    /**
+     * The position where the draggable will be placed when dropped.
+     */
+    anchor = signal(null);
+    /**
+     * INTERNAL USE ONLY. Emitted when the drag starts.
+     *
+     * - `elContPos` represents the relative to the viewport top-left
+     * coordinates of the draggable target
+     * - `id` is the ID of the draggable
+     */
+    _dragStart = output();
+    /**
+     * INTERNAL USE ONLY. Emitted on drag move.
+     *
+     * - `pos` represents the relative to the viewport mid/center coordinates
+     * of the draggable target
+     * - `rect` represents the coordinates of the bounding rectangle of the
+     * draggable target
+     * - `id` is the ID of the draggable
+     */
+    _dragMove = output();
+    /**
+     * INTERNAL USE ONLY. Emitted when the draggable is dropped.
+     */
+    _drop = output();
+    /**
+     * INTERNAL USE ONLY. Emitted when the drop animation is completed,
+     * i.e. the target is now anchored
+     */
+    _anchored = output();
     /**
      * Native element of the draggable target.
      */
@@ -668,71 +736,8 @@ class DraggableDirective {
     get element() {
         return this._element;
     }
+    _renderedSize = computed(() => Math.min(this.elementSize(), this.gridColumns()));
     constructor() {
-        this.templateRef = inject(TemplateRef);
-        this._doc = inject(DOCUMENT);
-        this._win = inject(WINDOW);
-        this._zone = inject(NgZone);
-        this._renderer = inject(Renderer2);
-        this._grid = inject(DROP_GRID, { optional: true });
-        this._listeners = [];
-        this._dragging = false;
-        this._elMidpoint = null;
-        this._relativeMousePos = { x: 0, y: 0 };
-        /**
-         * ID of the draggable element. Default: `'0'`
-         */
-        this.id = input('0', { alias: 'ngxDraggable' });
-        /**
-         * Represents the draggable size in the `ngx-drop-grid`.
-         * Shouldn't exceed the number of grid columns. Default: `1`
-         */
-        this.elementSize = input(1, { alias: 'ngxDraggableSize' });
-        /**
-         * Zero-based position or order of the draggable element in the `ngx-drop-grid`.
-         * Not dynamic.
-         */
-        this.position = input(0, { alias: 'ngxDraggablePosition' });
-        /**
-         * The columns number in the `ngx-drop-grid`
-         */
-        this.gridColumns = input(1, { alias: 'ngxDraggableCols' });
-        /**
-         * Disables the drag functionality.
-         */
-        this.disabled = signal(false);
-        /**
-         * The position where the draggable will be placed when dropped.
-         */
-        this.anchor = signal(null);
-        /**
-         * INTERNAL USE ONLY. Emitted when the drag starts.
-         *
-         * - `elContPos` represents the relative to the viewport top-left
-         * coordinates of the draggable target
-         * - `id` is the ID of the draggable
-         */
-        this._dragStart = output();
-        /**
-         * INTERNAL USE ONLY. Emitted on drag move.
-         *
-         * - `pos` represents the relative to the viewport mid/center coordinates
-         * of the draggable target
-         * - `rect` represents the coordinates of the bounding rectangle of the
-         * draggable target
-         * - `id` is the ID of the draggable
-         */
-        this._dragMove = output();
-        /**
-         * INTERNAL USE ONLY. Emitted when the draggable is dropped.
-         */
-        this._drop = output();
-        /**
-         * INTERNAL USE ONLY. Emitted when the drop animation is completed,
-         * i.e. the target is now anchored
-         */
-        this._anchored = output();
-        this._renderedSize = computed(() => Math.min(this.elementSize(), this.gridColumns()));
         effect(() => {
             this._setStyles({ 'grid-column': 'span ' + this._renderedSize() });
         });
@@ -962,10 +967,10 @@ class DraggableDirective {
             this._setStyles({ 'user-select': 'none' });
         }
     }
-    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "19.2.1", ngImport: i0, type: DraggableDirective, deps: [], target: i0.ɵɵFactoryTarget.Directive }); }
-    static { this.ɵdir = i0.ɵɵngDeclareDirective({ minVersion: "17.1.0", version: "19.2.1", type: DraggableDirective, isStandalone: true, selector: "[ngxDraggable]", inputs: { id: { classPropertyName: "id", publicName: "ngxDraggable", isSignal: true, isRequired: false, transformFunction: null }, elementSize: { classPropertyName: "elementSize", publicName: "ngxDraggableSize", isSignal: true, isRequired: false, transformFunction: null }, position: { classPropertyName: "position", publicName: "ngxDraggablePosition", isSignal: true, isRequired: false, transformFunction: null }, gridColumns: { classPropertyName: "gridColumns", publicName: "ngxDraggableCols", isSignal: true, isRequired: false, transformFunction: null } }, outputs: { _dragStart: "_dragStart", _dragMove: "_dragMove", _drop: "_drop", _anchored: "_anchored" }, providers: [provideWindow()], ngImport: i0 }); }
+    static ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "19.2.2", ngImport: i0, type: DraggableDirective, deps: [], target: i0.ɵɵFactoryTarget.Directive });
+    static ɵdir = i0.ɵɵngDeclareDirective({ minVersion: "17.1.0", version: "19.2.2", type: DraggableDirective, isStandalone: true, selector: "[ngxDraggable]", inputs: { id: { classPropertyName: "id", publicName: "ngxDraggable", isSignal: true, isRequired: false, transformFunction: null }, elementSize: { classPropertyName: "elementSize", publicName: "ngxDraggableSize", isSignal: true, isRequired: false, transformFunction: null }, position: { classPropertyName: "position", publicName: "ngxDraggablePosition", isSignal: true, isRequired: false, transformFunction: null }, gridColumns: { classPropertyName: "gridColumns", publicName: "ngxDraggableCols", isSignal: true, isRequired: false, transformFunction: null } }, outputs: { _dragStart: "_dragStart", _dragMove: "_dragMove", _drop: "_drop", _anchored: "_anchored" }, providers: [provideWindow()], ngImport: i0 });
 }
-i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "19.2.1", ngImport: i0, type: DraggableDirective, decorators: [{
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "19.2.2", ngImport: i0, type: DraggableDirective, decorators: [{
             type: Directive,
             args: [{
                     selector: '[ngxDraggable]',

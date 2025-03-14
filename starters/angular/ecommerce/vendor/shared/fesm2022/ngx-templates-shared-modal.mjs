@@ -5,16 +5,19 @@ import { DOCUMENT } from '@angular/common';
 import { IconComponent } from '@ngx-templates/shared/icon';
 
 class ModalController {
+    _id;
+    _modals;
+    _resolver;
     constructor(_id, _modals) {
         this._id = _id;
         this._modals = _modals;
-        /**
-         * A `Promise` that is resolved when the target modal is closed.
-         */
-        this.closed = new Promise((res) => {
-            this._resolver = res;
-        });
     }
+    /**
+     * A `Promise` that is resolved when the target modal is closed.
+     */
+    closed = new Promise((res) => {
+        this._resolver = res;
+    });
     /**
      * Close the target modal.
      *
@@ -35,11 +38,9 @@ const DEFAULT_CONFIG = {
     animated: true,
 };
 class ModalService {
-    constructor() {
-        this._modals = signal(List([]));
-        this._ct = 0;
-        this.modals = this._modals.asReadonly();
-    }
+    _modals = signal(List([]));
+    _ct = 0;
+    modals = this._modals.asReadonly();
     /**
      * Creates a modal by a provided content component.
      *
@@ -77,22 +78,20 @@ class ModalService {
     closeAll() {
         this._modals.set(List([]));
     }
-    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "19.2.1", ngImport: i0, type: ModalService, deps: [], target: i0.ɵɵFactoryTarget.Injectable }); }
-    static { this.ɵprov = i0.ɵɵngDeclareInjectable({ minVersion: "12.0.0", version: "19.2.1", ngImport: i0, type: ModalService, providedIn: 'root' }); }
+    static ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "19.2.2", ngImport: i0, type: ModalService, deps: [], target: i0.ɵɵFactoryTarget.Injectable });
+    static ɵprov = i0.ɵɵngDeclareInjectable({ minVersion: "12.0.0", version: "19.2.2", ngImport: i0, type: ModalService, providedIn: 'root' });
 }
-i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "19.2.1", ngImport: i0, type: ModalService, decorators: [{
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "19.2.2", ngImport: i0, type: ModalService, decorators: [{
             type: Injectable,
             args: [{ providedIn: 'root' }]
         }] });
 
 const MODAL_DATA = new InjectionToken('MODAL_DATA');
 class ModalComponent {
-    constructor() {
-        this._cdRef = inject(ChangeDetectorRef);
-        this.modal = input.required();
-        this.content = viewChild.required('content', { read: ViewContainerRef });
-        this._clickFlag = false;
-    }
+    _cdRef = inject(ChangeDetectorRef);
+    modal = input.required();
+    content = viewChild.required('content', { read: ViewContainerRef });
+    _clickFlag = false;
     /**
      * Create the modal content component and insert it
      * in the host view container.
@@ -136,10 +135,10 @@ class ModalComponent {
             parent: parentInjector,
         });
     }
-    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "19.2.1", ngImport: i0, type: ModalComponent, deps: [], target: i0.ɵɵFactoryTarget.Component }); }
-    static { this.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "17.2.0", version: "19.2.1", type: ModalComponent, isStandalone: true, selector: "ngx-modal", inputs: { modal: { classPropertyName: "modal", publicName: "modal", isSignal: true, isRequired: true, transformFunction: null } }, host: { listeners: { "mousedown": "onHostMousedown()" } }, viewQueries: [{ propertyName: "content", first: true, predicate: ["content"], descendants: true, read: ViewContainerRef, isSignal: true }], ngImport: i0, template: "<!-- eslint-disable-next-line -->\n<div\n  class=\"modal\"\n  [class.window-ui]=\"modal().config.modalWindowUi\"\n  [class.animated]=\"modal().config.animated\"\n  (mousedown)=\"onModalMousedown()\"\n>\n  <ng-container #content />\n</div>\n", styles: [":host{display:flex;align-items:center;justify-content:center;z-index:999999;background-color:#000000bf;position:fixed;inset:0;animation:blur-in .5s ease;animation-fill-mode:forwards;animation-iteration-count:1}:host .modal.window-ui{background-color:var(--color-bg);padding:1rem;border-radius:.25rem;border:1px solid var(--color-senary);box-shadow:0 0 10px #00000080;min-width:250px}:host .modal.window-ui.animated{animation:appear .3s ease;animation-fill-mode:forwards;animation-iteration-count:1}@keyframes blur-in{0%{-webkit-backdrop-filter:blur(0);backdrop-filter:blur(0)}to{-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}}@keyframes appear{0%{opacity:0;transform:translateY(-100%) scale(.75)}to{opacity:1;transform:translateY(0) scale(1)}}\n"], changeDetection: i0.ChangeDetectionStrategy.OnPush }); }
+    static ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "19.2.2", ngImport: i0, type: ModalComponent, deps: [], target: i0.ɵɵFactoryTarget.Component });
+    static ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "17.2.0", version: "19.2.2", type: ModalComponent, isStandalone: true, selector: "ngx-modal", inputs: { modal: { classPropertyName: "modal", publicName: "modal", isSignal: true, isRequired: true, transformFunction: null } }, host: { listeners: { "mousedown": "onHostMousedown()" } }, viewQueries: [{ propertyName: "content", first: true, predicate: ["content"], descendants: true, read: ViewContainerRef, isSignal: true }], ngImport: i0, template: "<!-- eslint-disable-next-line -->\n<div\n  class=\"modal\"\n  [class.window-ui]=\"modal().config.modalWindowUi\"\n  [class.animated]=\"modal().config.animated\"\n  (mousedown)=\"onModalMousedown()\"\n>\n  <ng-container #content />\n</div>\n", styles: [":host{display:flex;align-items:center;justify-content:center;z-index:999999;background-color:#000000bf;position:fixed;inset:0;animation:blur-in .5s ease;animation-fill-mode:forwards;animation-iteration-count:1}:host .modal.window-ui{background-color:var(--color-bg);padding:1rem;border-radius:.25rem;border:1px solid var(--color-senary);box-shadow:0 0 10px #00000080;min-width:250px}:host .modal.window-ui.animated{animation:appear .3s ease;animation-fill-mode:forwards;animation-iteration-count:1}@keyframes blur-in{0%{-webkit-backdrop-filter:blur(0);backdrop-filter:blur(0)}to{-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}}@keyframes appear{0%{opacity:0;transform:translateY(-100%) scale(.75)}to{opacity:1;transform:translateY(0) scale(1)}}\n"], changeDetection: i0.ChangeDetectionStrategy.OnPush });
 }
-i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "19.2.1", ngImport: i0, type: ModalComponent, decorators: [{
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "19.2.2", ngImport: i0, type: ModalComponent, decorators: [{
             type: Component,
             args: [{ selector: 'ngx-modal', imports: [], changeDetection: ChangeDetectionStrategy.OnPush, template: "<!-- eslint-disable-next-line -->\n<div\n  class=\"modal\"\n  [class.window-ui]=\"modal().config.modalWindowUi\"\n  [class.animated]=\"modal().config.animated\"\n  (mousedown)=\"onModalMousedown()\"\n>\n  <ng-container #content />\n</div>\n", styles: [":host{display:flex;align-items:center;justify-content:center;z-index:999999;background-color:#000000bf;position:fixed;inset:0;animation:blur-in .5s ease;animation-fill-mode:forwards;animation-iteration-count:1}:host .modal.window-ui{background-color:var(--color-bg);padding:1rem;border-radius:.25rem;border:1px solid var(--color-senary);box-shadow:0 0 10px #00000080;min-width:250px}:host .modal.window-ui.animated{animation:appear .3s ease;animation-fill-mode:forwards;animation-iteration-count:1}@keyframes blur-in{0%{-webkit-backdrop-filter:blur(0);backdrop-filter:blur(0)}to{-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}}@keyframes appear{0%{opacity:0;transform:translateY(-100%) scale(.75)}to{opacity:1;transform:translateY(0) scale(1)}}\n"] }]
         }], propDecorators: { onHostMousedown: [{
@@ -148,11 +147,11 @@ i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "19.2.1", ngImpor
             }] } });
 
 class ModalOutletComponent {
+    _doc = inject(DOCUMENT);
+    _modalService = inject(ModalService);
+    _renderer = inject(Renderer2);
+    modals = this._modalService.modals;
     constructor() {
-        this._doc = inject(DOCUMENT);
-        this._modalService = inject(ModalService);
-        this._renderer = inject(Renderer2);
-        this.modals = this._modalService.modals;
         effect(() => {
             const body = this._doc.body;
             if (this.modals().size) {
@@ -166,10 +165,10 @@ class ModalOutletComponent {
     closeCurrentVisibleModal() {
         this._modalService.closeCurrent();
     }
-    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "19.2.1", ngImport: i0, type: ModalOutletComponent, deps: [], target: i0.ɵɵFactoryTarget.Component }); }
-    static { this.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "17.0.0", version: "19.2.1", type: ModalOutletComponent, isStandalone: true, selector: "ngx-modal-outlet", host: { listeners: { "document:keydown.escape": "closeCurrentVisibleModal()" } }, ngImport: i0, template: "@for (m of modals(); track m.id; let i = $index) {\n  <ngx-modal\n    [modal]=\"m\"\n    [style.visibility]=\"i === modals().size - 1 ? 'visible' : 'hidden'\"\n  />\n}\n", styles: [":host{position:fixed;display:block;top:0}\n"], dependencies: [{ kind: "component", type: ModalComponent, selector: "ngx-modal", inputs: ["modal"] }], changeDetection: i0.ChangeDetectionStrategy.OnPush }); }
+    static ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "19.2.2", ngImport: i0, type: ModalOutletComponent, deps: [], target: i0.ɵɵFactoryTarget.Component });
+    static ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "17.0.0", version: "19.2.2", type: ModalOutletComponent, isStandalone: true, selector: "ngx-modal-outlet", host: { listeners: { "document:keydown.escape": "closeCurrentVisibleModal()" } }, ngImport: i0, template: "@for (m of modals(); track m.id; let i = $index) {\n  <ngx-modal\n    [modal]=\"m\"\n    [style.visibility]=\"i === modals().size - 1 ? 'visible' : 'hidden'\"\n  />\n}\n", styles: [":host{position:fixed;display:block;top:0}\n"], dependencies: [{ kind: "component", type: ModalComponent, selector: "ngx-modal", inputs: ["modal"] }], changeDetection: i0.ChangeDetectionStrategy.OnPush });
 }
-i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "19.2.1", ngImport: i0, type: ModalOutletComponent, decorators: [{
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "19.2.2", ngImport: i0, type: ModalOutletComponent, decorators: [{
             type: Component,
             args: [{ selector: 'ngx-modal-outlet', imports: [ModalComponent], changeDetection: ChangeDetectionStrategy.OnPush, template: "@for (m of modals(); track m.id; let i = $index) {\n  <ngx-modal\n    [modal]=\"m\"\n    [style.visibility]=\"i === modals().size - 1 ? 'visible' : 'hidden'\"\n  />\n}\n", styles: [":host{position:fixed;display:block;top:0}\n"] }]
         }], ctorParameters: () => [], propDecorators: { closeCurrentVisibleModal: [{
@@ -178,13 +177,11 @@ i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "19.2.1", ngImpor
             }] } });
 
 class ModalContentComponent {
-    constructor() {
-        this.controller = input.required();
-    }
-    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "19.2.1", ngImport: i0, type: ModalContentComponent, deps: [], target: i0.ɵɵFactoryTarget.Component }); }
-    static { this.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "17.1.0", version: "19.2.1", type: ModalContentComponent, isStandalone: true, selector: "ngx-modal-content", inputs: { controller: { classPropertyName: "controller", publicName: "controller", isSignal: true, isRequired: true, transformFunction: null } }, ngImport: i0, template: "<p class=\"title\">\n  <span><ng-content select=\"[title]\" /></span>\n  <button (click)=\"controller().close()\">\n    <ngx-icon name=\"Close\" />\n  </button>\n</p>\n<div class=\"content\">\n  <ng-content select=\"[content]\" />\n</div>\n", styles: [":host .title{font-size:1rem;font-weight:500;margin-top:.5rem;margin-bottom:.5rem}:host .content{font-size:.875rem;font-style:normal;line-height:1rem}@media (max-width: 640px){:host .content{font-size:1rem}}:host{display:block}:host .title{display:flex;align-items:center;justify-content:space-between;margin:0 0 1rem}:host .title span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}:host .title button{padding:0;background-color:transparent;border:none;cursor:pointer}:host .title button ngx-icon{--icon-color: var(--color-quinary);transition:fill .3s ease}:host .title button:hover>ngx-icon{--icon-color: var(--color-tertiary)}:host .content{max-height:80vh;overflow-y:auto;overflow-x:hidden}\n"], dependencies: [{ kind: "component", type: IconComponent, selector: "ngx-icon", inputs: ["name", "size"] }], changeDetection: i0.ChangeDetectionStrategy.OnPush }); }
+    controller = input.required();
+    static ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "19.2.2", ngImport: i0, type: ModalContentComponent, deps: [], target: i0.ɵɵFactoryTarget.Component });
+    static ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "17.1.0", version: "19.2.2", type: ModalContentComponent, isStandalone: true, selector: "ngx-modal-content", inputs: { controller: { classPropertyName: "controller", publicName: "controller", isSignal: true, isRequired: true, transformFunction: null } }, ngImport: i0, template: "<p class=\"title\">\n  <span><ng-content select=\"[title]\" /></span>\n  <button (click)=\"controller().close()\">\n    <ngx-icon name=\"Close\" />\n  </button>\n</p>\n<div class=\"content\">\n  <ng-content select=\"[content]\" />\n</div>\n", styles: [":host .title{font-size:1rem;font-weight:500;margin-top:.5rem;margin-bottom:.5rem}:host .content{font-size:.875rem;font-style:normal;line-height:1rem}@media (max-width: 640px){:host .content{font-size:1rem}}:host{display:block}:host .title{display:flex;align-items:center;justify-content:space-between;margin:0 0 1rem}:host .title span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}:host .title button{padding:0;background-color:transparent;border:none;cursor:pointer}:host .title button ngx-icon{--icon-color: var(--color-quinary);transition:fill .3s ease}:host .title button:hover>ngx-icon{--icon-color: var(--color-tertiary)}:host .content{max-height:80vh;overflow-y:auto;overflow-x:hidden}\n"], dependencies: [{ kind: "component", type: IconComponent, selector: "ngx-icon", inputs: ["name", "size"] }], changeDetection: i0.ChangeDetectionStrategy.OnPush });
 }
-i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "19.2.1", ngImport: i0, type: ModalContentComponent, decorators: [{
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "19.2.2", ngImport: i0, type: ModalContentComponent, decorators: [{
             type: Component,
             args: [{ selector: 'ngx-modal-content', imports: [IconComponent], changeDetection: ChangeDetectionStrategy.OnPush, template: "<p class=\"title\">\n  <span><ng-content select=\"[title]\" /></span>\n  <button (click)=\"controller().close()\">\n    <ngx-icon name=\"Close\" />\n  </button>\n</p>\n<div class=\"content\">\n  <ng-content select=\"[content]\" />\n</div>\n", styles: [":host .title{font-size:1rem;font-weight:500;margin-top:.5rem;margin-bottom:.5rem}:host .content{font-size:.875rem;font-style:normal;line-height:1rem}@media (max-width: 640px){:host .content{font-size:1rem}}:host{display:block}:host .title{display:flex;align-items:center;justify-content:space-between;margin:0 0 1rem}:host .title span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}:host .title button{padding:0;background-color:transparent;border:none;cursor:pointer}:host .title button ngx-icon{--icon-color: var(--color-quinary);transition:fill .3s ease}:host .title button:hover>ngx-icon{--icon-color: var(--color-tertiary)}:host .content{max-height:80vh;overflow-y:auto;overflow-x:hidden}\n"] }]
         }] });

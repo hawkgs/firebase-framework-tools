@@ -8,9 +8,7 @@ import { inject, PLATFORM_ID, Injectable, InjectionToken } from '@angular/core';
  * rendering phase (no use case).
  */
 class LocalStorage {
-    constructor() {
-        this._platformId = inject(PLATFORM_ID);
-    }
+    _platformId = inject(PLATFORM_ID);
     get _isBrowser() {
         return isPlatformBrowser(this._platformId);
     }
@@ -56,10 +54,10 @@ class LocalStorage {
         }
         localStorage.clear();
     }
-    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "19.2.1", ngImport: i0, type: LocalStorage, deps: [], target: i0.ɵɵFactoryTarget.Injectable }); }
-    static { this.ɵprov = i0.ɵɵngDeclareInjectable({ minVersion: "12.0.0", version: "19.2.1", ngImport: i0, type: LocalStorage, providedIn: 'root' }); }
+    static ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "19.2.2", ngImport: i0, type: LocalStorage, deps: [], target: i0.ɵɵFactoryTarget.Injectable });
+    static ɵprov = i0.ɵɵngDeclareInjectable({ minVersion: "12.0.0", version: "19.2.2", ngImport: i0, type: LocalStorage, providedIn: 'root' });
 }
-i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "19.2.1", ngImport: i0, type: LocalStorage, decorators: [{
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "19.2.2", ngImport: i0, type: LocalStorage, decorators: [{
             type: Injectable,
             args: [{ providedIn: 'root' }]
         }] });

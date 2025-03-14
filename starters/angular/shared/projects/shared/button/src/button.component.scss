@@ -1,0 +1,75 @@
+@use '../../styles/screen-breakpoints' as sb;
+
+:host {
+  font-weight: 500;
+  border-radius: 0.25rem;
+  border: none;
+  transition: color 300ms ease;
+  font-size: 0.875rem;
+  padding: 0.5rem;
+  cursor: pointer;
+
+  &.minimal-size-btn {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.75rem;
+    border-radius: 0.2rem;
+
+    @include sb.bp-600w {
+      font-size: 1rem;
+    }
+  }
+
+  &.large-size-btn {
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+  }
+
+  &.primary-btn,
+  &.danger-btn {
+    border: 1px solid transparent;
+    color: var(--color-bg);
+    transition:
+      background-color 300ms ease,
+      background-position 300ms ease,
+      opacity 300ms ease;
+
+    &:not([disabled]):hover {
+      background-position-x: calc(
+        100% + 1px
+      ); // +1px due to the transparent border
+    }
+
+    &[disabled] {
+      background: var(--color-quinary);
+    }
+  }
+
+  &.primary-btn {
+    background: var(--gradient-orange-to-violet);
+    background-size: 200%;
+    background-position: 50%;
+  }
+
+  &.secondary-btn {
+    border: 1px solid var(--color-senary);
+    color: var(--color-tertiary);
+    transition:
+      border-color 300ms ease,
+      color 300ms ease;
+    background-color: var(--color-bg);
+
+    &:not([disabled]):hover {
+      border-color: var(--color-french-violet);
+    }
+
+    &[disabled] {
+      color: var(--color-quinary);
+    }
+  }
+
+  &.danger-btn {
+    background: var(--gradient-red-to-darkred);
+    background-size: 200%;
+    background-position: 50%;
+  }
+}

@@ -41,10 +41,8 @@ function buildQueryParamsString(params) {
  * Script tags are stripped in order to prevent XSS.
  */
 class SafeHtmlPipe {
-    constructor() {
-        this._sanitizer = inject(DomSanitizer);
-        this._platformId = inject(PLATFORM_ID);
-    }
+    _sanitizer = inject(DomSanitizer);
+    _platformId = inject(PLATFORM_ID);
     transform(html) {
         const sanitized = this._sanitizeHtml(html);
         return this._sanitizer.bypassSecurityTrustHtml(sanitized);
@@ -59,10 +57,10 @@ class SafeHtmlPipe {
         scriptTags.forEach((s) => s.remove());
         return doc.body.innerHTML;
     }
-    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "19.2.1", ngImport: i0, type: SafeHtmlPipe, deps: [], target: i0.ɵɵFactoryTarget.Pipe }); }
-    static { this.ɵpipe = i0.ɵɵngDeclarePipe({ minVersion: "14.0.0", version: "19.2.1", ngImport: i0, type: SafeHtmlPipe, isStandalone: true, name: "safeHtml" }); }
+    static ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "19.2.2", ngImport: i0, type: SafeHtmlPipe, deps: [], target: i0.ɵɵFactoryTarget.Pipe });
+    static ɵpipe = i0.ɵɵngDeclarePipe({ minVersion: "14.0.0", version: "19.2.2", ngImport: i0, type: SafeHtmlPipe, isStandalone: true, name: "safeHtml" });
 }
-i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "19.2.1", ngImport: i0, type: SafeHtmlPipe, decorators: [{
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "19.2.2", ngImport: i0, type: SafeHtmlPipe, decorators: [{
             type: Pipe,
             args: [{
                     name: 'safeHtml',

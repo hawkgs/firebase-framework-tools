@@ -1,0 +1,23 @@
+:host {
+  .outlet {
+    position: fixed;
+    width: 100%;
+    height: 0;
+
+    &.default {
+      top: 0;
+      left: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    &.notifications {
+      bottom: 16px;
+      left: 0;
+      display: flex;
+      flex-direction: column-reverse;
+      align-items: flex-start;
+    }
+  }
+}

@@ -1,0 +1,11 @@
+<ng-template #slotTemplate>
+  <div class="slot"></div>
+</ng-template>
+
+<section
+  class="grid"
+  [style.grid-template-columns]="gridTemplateColumns()"
+  [style.gap]="cellGap() + 'px'"
+>
+  <ng-container #grid />
+</section>

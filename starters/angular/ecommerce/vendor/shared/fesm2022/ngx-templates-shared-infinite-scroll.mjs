@@ -9,27 +9,25 @@ import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 // of the footer.
 const SCROLL_OFFSET = 320;
 class InfiniteScrollComponent {
-    constructor() {
-        this._win = inject(WINDOW);
-        this._doc = inject(DOCUMENT);
-        this._platformId = inject(PLATFORM_ID);
-        this._renderer = inject(Renderer2);
-        this._zone = inject(NgZone);
-        this._endReached = false;
-        this._listeners = [];
-        /**
-         * Provide a custom scroll container.
-         *
-         * Default: `window`
-         */
-        this.scrollCont = input(null);
-        /**
-         * Emitted when the end of the container is reached.
-         *
-         * @event CompleteFn – Should be called when the data is loaded.
-         */
-        this.loadNext = output();
-    }
+    _win = inject(WINDOW);
+    _doc = inject(DOCUMENT);
+    _platformId = inject(PLATFORM_ID);
+    _renderer = inject(Renderer2);
+    _zone = inject(NgZone);
+    _endReached = false;
+    _listeners = [];
+    /**
+     * Provide a custom scroll container.
+     *
+     * Default: `window`
+     */
+    scrollCont = input(null);
+    /**
+     * Emitted when the end of the container is reached.
+     *
+     * @event CompleteFn – Should be called when the data is loaded.
+     */
+    loadNext = output();
     ngOnInit() {
         this._addEventListeners();
     }
@@ -74,10 +72,10 @@ class InfiniteScrollComponent {
             this._listeners.push(listener);
         });
     }
-    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "19.2.1", ngImport: i0, type: InfiniteScrollComponent, deps: [], target: i0.ɵɵFactoryTarget.Component }); }
-    static { this.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "17.1.0", version: "19.2.1", type: InfiniteScrollComponent, isStandalone: true, selector: "ngx-infinite-scroll", inputs: { scrollCont: { classPropertyName: "scrollCont", publicName: "scrollCont", isSignal: true, isRequired: false, transformFunction: null } }, outputs: { loadNext: "loadNext" }, ngImport: i0, template: "<button\n  class=\"fallback-btn\"\n  (click)=\"onLoadNext()\"\n  aria-label=\"Load more products\"\n>\n  <ngx-icon size=\"lg\" name=\"Downloading\" />\n  <span>Load More</span>\n</button>\n", styles: [":host{display:flex;justify-content:center;margin-top:3rem}:host button{color:var(--color-quaternary);background-color:transparent;transition:color .3s ease;align-items:center;border:none;display:flex;font-weight:600}:host button ngx-icon{margin-right:.5rem}:host button:hover{color:var(--color-primary)}\n"], dependencies: [{ kind: "component", type: IconComponent, selector: "ngx-icon", inputs: ["name", "size"] }], changeDetection: i0.ChangeDetectionStrategy.OnPush }); }
+    static ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "19.2.2", ngImport: i0, type: InfiniteScrollComponent, deps: [], target: i0.ɵɵFactoryTarget.Component });
+    static ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "17.1.0", version: "19.2.2", type: InfiniteScrollComponent, isStandalone: true, selector: "ngx-infinite-scroll", inputs: { scrollCont: { classPropertyName: "scrollCont", publicName: "scrollCont", isSignal: true, isRequired: false, transformFunction: null } }, outputs: { loadNext: "loadNext" }, ngImport: i0, template: "<button\n  class=\"fallback-btn\"\n  (click)=\"onLoadNext()\"\n  aria-label=\"Load more products\"\n>\n  <ngx-icon size=\"lg\" name=\"Downloading\" />\n  <span>Load More</span>\n</button>\n", styles: [":host{display:flex;justify-content:center;margin-top:3rem}:host button{color:var(--color-quaternary);background-color:transparent;transition:color .3s ease;align-items:center;border:none;display:flex;font-weight:600}:host button ngx-icon{margin-right:.5rem}:host button:hover{color:var(--color-primary)}\n"], dependencies: [{ kind: "component", type: IconComponent, selector: "ngx-icon", inputs: ["name", "size"] }], changeDetection: i0.ChangeDetectionStrategy.OnPush });
 }
-i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "19.2.1", ngImport: i0, type: InfiniteScrollComponent, decorators: [{
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "19.2.2", ngImport: i0, type: InfiniteScrollComponent, decorators: [{
             type: Component,
             args: [{ selector: 'ngx-infinite-scroll', imports: [IconComponent], changeDetection: ChangeDetectionStrategy.OnPush, template: "<button\n  class=\"fallback-btn\"\n  (click)=\"onLoadNext()\"\n  aria-label=\"Load more products\"\n>\n  <ngx-icon size=\"lg\" name=\"Downloading\" />\n  <span>Load More</span>\n</button>\n", styles: [":host{display:flex;justify-content:center;margin-top:3rem}:host button{color:var(--color-quaternary);background-color:transparent;transition:color .3s ease;align-items:center;border:none;display:flex;font-weight:600}:host button ngx-icon{margin-right:.5rem}:host button:hover{color:var(--color-primary)}\n"] }]
         }] });

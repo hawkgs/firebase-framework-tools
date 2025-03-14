@@ -11,10 +11,11 @@ const getThemeClass = (t) => `ngx-${t}-theme`;
  * The initialization logic can be found in index.html
  */
 class ThemeService {
+    _doc = inject(DOCUMENT);
+    _storage = inject(LocalStorage);
+    _renderer;
+    _current = signal(null);
     constructor(rendererFactory) {
-        this._doc = inject(DOCUMENT);
-        this._storage = inject(LocalStorage);
-        this._current = signal(null);
         this._renderer = rendererFactory.createRenderer(null, null);
     }
     /**
@@ -53,10 +54,10 @@ class ThemeService {
             this._current.set(current ? current : 'system');
         }
     }
-    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "19.2.1", ngImport: i0, type: ThemeService, deps: [{ token: i0.RendererFactory2 }], target: i0.ɵɵFactoryTarget.Injectable }); }
-    static { this.ɵprov = i0.ɵɵngDeclareInjectable({ minVersion: "12.0.0", version: "19.2.1", ngImport: i0, type: ThemeService, providedIn: 'root' }); }
+    static ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "19.2.2", ngImport: i0, type: ThemeService, deps: [{ token: i0.RendererFactory2 }], target: i0.ɵɵFactoryTarget.Injectable });
+    static ɵprov = i0.ɵɵngDeclareInjectable({ minVersion: "12.0.0", version: "19.2.2", ngImport: i0, type: ThemeService, providedIn: 'root' });
 }
-i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "19.2.1", ngImport: i0, type: ThemeService, decorators: [{
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "19.2.2", ngImport: i0, type: ThemeService, decorators: [{
             type: Injectable,
             args: [{ providedIn: 'root' }]
         }], ctorParameters: () => [{ type: i0.RendererFactory2 }] });
@@ -70,10 +71,10 @@ class ThemeLabelPipe {
     transform(value) {
         return THEME_TO_LABEL[value];
     }
-    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "19.2.1", ngImport: i0, type: ThemeLabelPipe, deps: [], target: i0.ɵɵFactoryTarget.Pipe }); }
-    static { this.ɵpipe = i0.ɵɵngDeclarePipe({ minVersion: "14.0.0", version: "19.2.1", ngImport: i0, type: ThemeLabelPipe, isStandalone: true, name: "themeLabel" }); }
+    static ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "19.2.2", ngImport: i0, type: ThemeLabelPipe, deps: [], target: i0.ɵɵFactoryTarget.Pipe });
+    static ɵpipe = i0.ɵɵngDeclarePipe({ minVersion: "14.0.0", version: "19.2.2", ngImport: i0, type: ThemeLabelPipe, isStandalone: true, name: "themeLabel" });
 }
-i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "19.2.1", ngImport: i0, type: ThemeLabelPipe, decorators: [{
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "19.2.2", ngImport: i0, type: ThemeLabelPipe, decorators: [{
             type: Pipe,
             args: [{
                     name: 'themeLabel',
@@ -87,21 +88,19 @@ const THEME_TO_ICON = {
     ['dark']: 'DarkMode',
 };
 class ThemeSwitchComponent {
-    constructor() {
-        this._theme = inject(ThemeService);
-        this.currentTheme = this._theme.getTheme();
-        this.iconOnly = input(false);
-        this.THEME_TO_ICON = THEME_TO_ICON;
-    }
+    _theme = inject(ThemeService);
+    currentTheme = this._theme.getTheme();
+    iconOnly = input(false);
+    THEME_TO_ICON = THEME_TO_ICON;
     onThemeSwitch() {
         const currentIdx = THEME_SEQ.findIndex((t) => t === this.currentTheme());
         const newIdx = (currentIdx + 1) % THEME_SEQ.length;
         this._theme.setTheme(THEME_SEQ[newIdx]);
     }
-    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "19.2.1", ngImport: i0, type: ThemeSwitchComponent, deps: [], target: i0.ɵɵFactoryTarget.Component }); }
-    static { this.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "17.0.0", version: "19.2.1", type: ThemeSwitchComponent, isStandalone: true, selector: "ngx-theme-switch", inputs: { iconOnly: { classPropertyName: "iconOnly", publicName: "iconOnly", isSignal: true, isRequired: false, transformFunction: null } }, ngImport: i0, template: "<button\n  (click)=\"onThemeSwitch()\"\n  [title]=\"\n    !iconOnly() ? 'Change the current theme' : (currentTheme() | themeLabel)\n  \"\n>\n  @if (!iconOnly()) {\n    <span>{{ currentTheme() | themeLabel }}</span>\n  }\n  <ngx-icon [name]=\"THEME_TO_ICON[currentTheme()]\" size=\"xlg\" />\n</button>\n", styles: [":host button{text-transform:uppercase;font-size:.625rem;letter-spacing:.125rem}:host{display:block}:host button{display:flex;align-items:center;justify-content:flex-end;width:auto;height:auto;border:none;background:transparent;padding:0;color:var(--color-quaternary);transition:color .3s ease;cursor:pointer}:host button span{margin-right:.25rem;width:0;overflow:hidden;transition:width .2s ease}:host button:hover>span{width:100%}:host button:hover{color:var(--color-primary)}\n"], dependencies: [{ kind: "component", type: IconComponent, selector: "ngx-icon", inputs: ["name", "size"] }, { kind: "pipe", type: ThemeLabelPipe, name: "themeLabel" }], changeDetection: i0.ChangeDetectionStrategy.OnPush }); }
+    static ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "19.2.2", ngImport: i0, type: ThemeSwitchComponent, deps: [], target: i0.ɵɵFactoryTarget.Component });
+    static ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "17.0.0", version: "19.2.2", type: ThemeSwitchComponent, isStandalone: true, selector: "ngx-theme-switch", inputs: { iconOnly: { classPropertyName: "iconOnly", publicName: "iconOnly", isSignal: true, isRequired: false, transformFunction: null } }, ngImport: i0, template: "<button\n  (click)=\"onThemeSwitch()\"\n  [title]=\"\n    !iconOnly() ? 'Change the current theme' : (currentTheme() | themeLabel)\n  \"\n>\n  @if (!iconOnly()) {\n    <span>{{ currentTheme() | themeLabel }}</span>\n  }\n  <ngx-icon [name]=\"THEME_TO_ICON[currentTheme()]\" size=\"xlg\" />\n</button>\n", styles: [":host button{text-transform:uppercase;font-size:.625rem;letter-spacing:.125rem}:host{display:block}:host button{display:flex;align-items:center;justify-content:flex-end;width:auto;height:auto;border:none;background:transparent;padding:0;color:var(--color-quaternary);transition:color .3s ease;cursor:pointer}:host button span{margin-right:.25rem;width:0;overflow:hidden;transition:width .2s ease}:host button:hover>span{width:100%}:host button:hover{color:var(--color-primary)}\n"], dependencies: [{ kind: "component", type: IconComponent, selector: "ngx-icon", inputs: ["name", "size"] }, { kind: "pipe", type: ThemeLabelPipe, name: "themeLabel" }], changeDetection: i0.ChangeDetectionStrategy.OnPush });
 }
-i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "19.2.1", ngImport: i0, type: ThemeSwitchComponent, decorators: [{
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "19.2.2", ngImport: i0, type: ThemeSwitchComponent, decorators: [{
             type: Component,
             args: [{ selector: 'ngx-theme-switch', imports: [IconComponent, ThemeLabelPipe], changeDetection: ChangeDetectionStrategy.OnPush, template: "<button\n  (click)=\"onThemeSwitch()\"\n  [title]=\"\n    !iconOnly() ? 'Change the current theme' : (currentTheme() | themeLabel)\n  \"\n>\n  @if (!iconOnly()) {\n    <span>{{ currentTheme() | themeLabel }}</span>\n  }\n  <ngx-icon [name]=\"THEME_TO_ICON[currentTheme()]\" size=\"xlg\" />\n</button>\n", styles: [":host button{text-transform:uppercase;font-size:.625rem;letter-spacing:.125rem}:host{display:block}:host button{display:flex;align-items:center;justify-content:flex-end;width:auto;height:auto;border:none;background:transparent;padding:0;color:var(--color-quaternary);transition:color .3s ease;cursor:pointer}:host button span{margin-right:.25rem;width:0;overflow:hidden;transition:width .2s ease}:host button:hover>span{width:100%}:host button:hover{color:var(--color-primary)}\n"] }]
         }] });

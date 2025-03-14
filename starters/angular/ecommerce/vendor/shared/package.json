@@ -23,14 +23,6 @@
       "types": "./app-logo/index.d.ts",
       "default": "./fesm2022/ngx-templates-shared-app-logo.mjs"
     },
-    "./fetch": {
-      "types": "./fetch/index.d.ts",
-      "default": "./fesm2022/ngx-templates-shared-fetch.mjs"
-    },
-    "./context-menu": {
-      "types": "./context-menu/index.d.ts",
-      "default": "./fesm2022/ngx-templates-shared-context-menu.mjs"
-    },
     "./drag-and-drop": {
       "types": "./drag-and-drop/index.d.ts",
       "default": "./fesm2022/ngx-templates-shared-drag-and-drop.mjs"
@@ -38,6 +30,14 @@
     "./button": {
       "types": "./button/index.d.ts",
       "default": "./fesm2022/ngx-templates-shared-button.mjs"
+    },
+    "./context-menu": {
+      "types": "./context-menu/index.d.ts",
+      "default": "./fesm2022/ngx-templates-shared-context-menu.mjs"
+    },
+    "./fetch": {
+      "types": "./fetch/index.d.ts",
+      "default": "./fesm2022/ngx-templates-shared-fetch.mjs"
     },
     "./icon": {
       "types": "./icon/index.d.ts",
