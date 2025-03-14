@@ -1,0 +1,83 @@
+{
+  "name": "@ngx-templates/shared",
+  "version": "0.0.1",
+  "peerDependencies": {
+    "@angular/common": "^17.3.0",
+    "@angular/core": "^17.3.0"
+  },
+  "dependencies": {
+    "tslib": "^2.3.0"
+  },
+  "sideEffects": false,
+  "module": "fesm2022/ngx-templates-shared.mjs",
+  "typings": "index.d.ts",
+  "exports": {
+    "./package.json": {
+      "default": "./package.json"
+    },
+    ".": {
+      "types": "./index.d.ts",
+      "default": "./fesm2022/ngx-templates-shared.mjs"
+    },
+    "./app-logo": {
+      "types": "./app-logo/index.d.ts",
+      "default": "./fesm2022/ngx-templates-shared-app-logo.mjs"
+    },
+    "./fetch": {
+      "types": "./fetch/index.d.ts",
+      "default": "./fesm2022/ngx-templates-shared-fetch.mjs"
+    },
+    "./context-menu": {
+      "types": "./context-menu/index.d.ts",
+      "default": "./fesm2022/ngx-templates-shared-context-menu.mjs"
+    },
+    "./drag-and-drop": {
+      "types": "./drag-and-drop/index.d.ts",
+      "default": "./fesm2022/ngx-templates-shared-drag-and-drop.mjs"
+    },
+    "./button": {
+      "types": "./button/index.d.ts",
+      "default": "./fesm2022/ngx-templates-shared-button.mjs"
+    },
+    "./icon": {
+      "types": "./icon/index.d.ts",
+      "default": "./fesm2022/ngx-templates-shared-icon.mjs"
+    },
+    "./infinite-scroll": {
+      "types": "./infinite-scroll/index.d.ts",
+      "default": "./fesm2022/ngx-templates-shared-infinite-scroll.mjs"
+    },
+    "./modal": {
+      "types": "./modal/index.d.ts",
+      "default": "./fesm2022/ngx-templates-shared-modal.mjs"
+    },
+    "./select": {
+      "types": "./select/index.d.ts",
+      "default": "./fesm2022/ngx-templates-shared-select.mjs"
+    },
+    "./selector": {
+      "types": "./selector/index.d.ts",
+      "default": "./fesm2022/ngx-templates-shared-selector.mjs"
+    },
+    "./services": {
+      "types": "./services/index.d.ts",
+      "default": "./fesm2022/ngx-templates-shared-services.mjs"
+    },
+    "./switch": {
+      "types": "./switch/index.d.ts",
+      "default": "./fesm2022/ngx-templates-shared-switch.mjs"
+    },
+    "./theme": {
+      "types": "./theme/index.d.ts",
+      "default": "./fesm2022/ngx-templates-shared-theme.mjs"
+    },
+    "./toasts": {
+      "types": "./toasts/index.d.ts",
+      "default": "./fesm2022/ngx-templates-shared-toasts.mjs"
+    },
+    "./utils": {
+      "types": "./utils/index.d.ts",
+      "default": "./fesm2022/ngx-templates-shared-utils.mjs"
+    }
+  }
+}
