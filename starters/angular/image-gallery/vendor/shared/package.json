@@ -23,10 +23,6 @@
       "types": "./app-logo/index.d.ts",
       "default": "./fesm2022/ngx-templates-shared-app-logo.mjs"
     },
-    "./drag-and-drop": {
-      "types": "./drag-and-drop/index.d.ts",
-      "default": "./fesm2022/ngx-templates-shared-drag-and-drop.mjs"
-    },
     "./button": {
       "types": "./button/index.d.ts",
       "default": "./fesm2022/ngx-templates-shared-button.mjs"
@@ -38,6 +34,10 @@
     "./fetch": {
       "types": "./fetch/index.d.ts",
       "default": "./fesm2022/ngx-templates-shared-fetch.mjs"
+    },
+    "./drag-and-drop": {
+      "types": "./drag-and-drop/index.d.ts",
+      "default": "./fesm2022/ngx-templates-shared-drag-and-drop.mjs"
     },
     "./icon": {
       "types": "./icon/index.d.ts",
@@ -71,13 +71,13 @@
       "types": "./theme/index.d.ts",
       "default": "./fesm2022/ngx-templates-shared-theme.mjs"
     },
-    "./toasts": {
-      "types": "./toasts/index.d.ts",
-      "default": "./fesm2022/ngx-templates-shared-toasts.mjs"
-    },
     "./utils": {
       "types": "./utils/index.d.ts",
       "default": "./fesm2022/ngx-templates-shared-utils.mjs"
+    },
+    "./toasts": {
+      "types": "./toasts/index.d.ts",
+      "default": "./fesm2022/ngx-templates-shared-toasts.mjs"
     }
   }
 }

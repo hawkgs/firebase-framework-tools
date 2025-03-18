@@ -6,7 +6,8 @@
     "start": "ng serve shared",
     "build": "ng build shared",
     "watch": "ng build shared --watch",
-    "test": "ng test shared"
+    "test": "ng test shared",
+    "build-and-distribute": "node ./scripts/build-and-distribute.js"
   },
   "private": true,
   "dependencies": {
