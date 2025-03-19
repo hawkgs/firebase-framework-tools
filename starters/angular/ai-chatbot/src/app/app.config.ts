@@ -25,11 +25,10 @@ export const appConfig: ApplicationConfig = {
     // to your own API (set URL in /environments).
     //
     // Keep in mind that the Fetch mock can use internally the
-    // actual Gemini API (api/gemini.js).
+    // actual Gemini API described in server.ts
     // In essence: App => Fetch mock => Gemini API (mocked or real).
-    // In order to do that, start-api:gemini and change mockedData
-    // config parameter to `false`.
-    provideGeminiApi({ mockedData: true }),
+    // In order to do that, change mockedData config parameter to `false`.
+    provideGeminiApi({ mockedData: false }), // Currently set to `false`
     provideFetchMockState(),
     provideFetchApi(withFetchMock(acbRequestResponseMock)),
   ],

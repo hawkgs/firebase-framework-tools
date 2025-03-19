@@ -1,6 +1,6 @@
 import { Provider } from '@angular/core';
 
-const GEMINI_API_URL = 'http://localhost:5001';
+const GEMINI_API_URL = 'http://localhost:4200/api';
 const DEFAULT_DELAY = 2000;
 const LOREM_IPSUM =
   'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.';
